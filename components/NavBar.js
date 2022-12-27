@@ -6,12 +6,6 @@ function NavBar() {
     const router = useRouter()
     const {data: session} = useSession()
 
-    useEffect(()=>{
-        if (session) {
-            router.push('/home')
-        }
-    },[session])
-
     return ( 
         <div className="w-full h-[5rem] border-2 rounded-t-md bg-gradient-to-br from-sky-100 to-indigo-300 flex flex-row justify-between items-center">
             <a className="text-3xl text-black mx-3" href="#">ToDo</a>
