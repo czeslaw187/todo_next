@@ -3,6 +3,10 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { addUser } from "../lib/baseReducer";
 import { useSelector, useDispatch } from "react-redux";
+import { loadStripe } from '@stripe/stripe-js';
+import axios from 'axios';
+const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = loadStripe(publishableKey);
 
 function Subscribe() {
     const {data:session} = useSession()
@@ -19,6 +23,17 @@ function Subscribe() {
         dispatch(addUser(session?.user))
     },[])
     
+    const createCheckOutSession = async () => {
+        const stripe = await stripePromise;
+        const checkoutSession = await axios.get('/api/create-stripe-session');
+        const result = await stripe.redirectToCheckout({
+          sessionId: checkoutSession.data.id,
+        });
+        if (result.error) {
+          alert(result.error.message);
+        }
+      };
+
     console.log(myUser, 'session')
 
     return ( 
@@ -27,7 +42,9 @@ function Subscribe() {
                 <div className="text-slate-700 text-lg mx-auto mt-4">
                     You have to subscribe to use this service
                 </div>
-                <button type="button" className="text-center text-slate-600 font-bold p-2 w-5/12 rounded-md border-none bg-lime-500 mx-auto mt-5 hover:bg-lime-300 active:shadow-inner active:shadow-black">Subscribe</button>
+                <button type="button" 
+                        onClick={createCheckOutSession}
+                        className="text-center text-slate-600 font-bold p-2 w-5/12 rounded-md border-none bg-lime-500 mx-auto mt-5 hover:bg-lime-300 active:shadow-inner active:shadow-black">Subscribe</button>
             </div>
         </div>
      );
