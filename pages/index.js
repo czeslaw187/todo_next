@@ -10,7 +10,7 @@ function Index() {
   const router = useRouter()
   useEffect(()=>{
     if (session) {
-      router.push('/home')
+      router.push('/subscribe')
     }
   },[session])
   return ( 

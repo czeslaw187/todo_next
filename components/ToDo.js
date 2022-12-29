@@ -14,7 +14,7 @@ function ToDo({it}) {
                         onClick={()=>{dispatch(changeActive(it))}}>
                             {it.isActive ? <FontAwesomeIcon icon={faCheck} /> : null}
                 </button>
-                <div className={it.isActive ? "ml-5 line-through text-gray-500" : "ml-5"}>
+                <div className={it.isActive ? "ml-5 line-through text-gray-500" : "ml-5 text-slate-700"}>
                     {it.content}
                 </div>
             </div>

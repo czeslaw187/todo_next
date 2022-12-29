@@ -19,6 +19,7 @@ function TodoList() {
             setInput('')
         }
     }
+    
     let listOfTodos = []
     if (activeTab == 'Active') {
         listOfTodos = myTodos.todos.filter(el => {return !el.isActive})
