@@ -15,11 +15,20 @@ function TodoList() {
     const handleSubmit = (e) =>{
         if (e.key == 'Enter') {
             const myid = uuidv4()
-            dispatch(addTodo({id:myid,content:input,isActive:true}))
+            dispatch(addTodo({id:myid,content:input,isActive:false}))
             setInput('')
         }
     }
+    let listOfTodos = []
+    if (activeTab == 'Active') {
+        listOfTodos = myTodos.todos.filter(el => {return !el.isActive})
+    } else if (activeTab == 'Completed') {
+        listOfTodos = myTodos.todos.filter(el => {return el.isActive})
+    } else {
+        listOfTodos = myTodos.todos
+    } 
 
+    console.log(listOfTodos, 'list')
     return ( 
         <>
             <div className="w-full flex flex-col">
@@ -59,7 +68,7 @@ function TodoList() {
             </div>
             <ul className="h-full border-2">
             {
-                myTodos.todos.length > 0 && myTodos.todos.map((it,id)=>{
+                listOfTodos.length > 0 && listOfTodos.map((it,id)=>{
                     return (
                         <li key={id}>
                             <ToDo it={it} />
