@@ -2,29 +2,30 @@ import ToDo from "./ToDo";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addTodo } from "../lib/baseReducer";
+import { clearTodo } from "../lib/baseReducer";
+import { v4 as uuidv4 } from 'uuid';
 
 
 function TodoList() {
     const [input,setInput] = useState('')
     const [activeTab,setActiveTab] = useState('All')
-    const myTodos = useSelector(state=>state.todos)
+    let myTodos = useSelector(state=>state.todos)
     const dispatch = useDispatch()
 
-    const handleSubmit =(e) =>{
-        e.preventDefault()
-        if (e.target.key == 'Enter') {
-            dispatch(addTodo(input))
+    const handleSubmit = (e) =>{
+        if (e.key == 'Enter') {
+            const myid = uuidv4()
+            dispatch(addTodo({id:myid,content:input,isActive:true}))
+            setInput('')
         }
-        setInput('')
     }
 
-    console.log(myTodos, 'slice')
     return ( 
         <>
-            <div className="w-full flex flex-col mt-auto">
-                <label htmlFor="todo" className="mx-auto text-xl text-black opacity-70">Add To Do...</label>
-                <input onChange={(e)=>{setInput(e.target.value)}} 
-                       onKeyDown={(e)=>{handleSubmit(e)}}
+            <div className="w-full flex flex-col">
+                <label htmlFor="todo" className="mx-auto text-xl mt-[6rem] text-black opacity-70">Add To Do...</label>
+                <input onChange={(e)=>{setInput(e.target.value)}}
+                       onKeyDown={(e)=>{handleSubmit(e)}} 
                        className="mx-auto w-5/12 bg-sky-50 h-[2.5rem] rounded-md shadow-md shadow-black text-black" 
                        type="text" 
                        name="todo" 
@@ -50,8 +51,23 @@ function TodoList() {
                         type="button">
                             Completed
                 </button>
+                <button type="button"
+                        onClick={()=>{dispatch(clearTodo())}}
+                        className="text-lg text-slate-500 border-r-2 w-full rounded-l-md active:bg-indigo-200">
+                        Clear All
+                </button>
             </div>
-            <ToDo />
+            <ul className="h-full border-2">
+            {
+                myTodos.todos.length > 0 && myTodos.todos.map((it,id)=>{
+                    return (
+                        <li key={id}>
+                            <ToDo it={it} />
+                        </li>
+                    )
+                })
+            }
+            </ul>
         </>
      );
 }

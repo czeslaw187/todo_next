@@ -12,7 +12,9 @@ function App({
   return (
     <SessionProvider session={session}>
       <Layout>
-        <Component {...pageProps} />
+        <PersistGate loading={null} persistor={persistor}>
+          <Component {...pageProps} />
+        </PersistGate>
       </Layout>
     </SessionProvider>
   )

@@ -11,7 +11,6 @@ function Home() {
             router.push('/')
         }
     },[session])
-    console.log(session,'session')
     return ( 
         <div className="h-full flex flex-col">
             <TodoList />
