@@ -13,6 +13,8 @@ function Subscribe() {
     const router = useRouter()
     const myUser = useSelector(state=>state.todos.user)
     const dispatch = useDispatch()
+    const {status} = router.query  
+    console.log(status, 'session')
     useEffect(()=>{
         if (!session) {
             router.push('/')
@@ -33,9 +35,10 @@ function Subscribe() {
           alert(result.error.message);
         }
       };
-
-    console.log(myUser, 'session')
-
+    
+    if (status && status == 'success') {
+        router.push('/success')
+    }
     return ( 
         <div className="h-full flex">
             <div className="mx-auto mt-[9rem] w-4/12 h-[10rem] border-2 rounded-md shadow-md shadow-white flex flex-col">
