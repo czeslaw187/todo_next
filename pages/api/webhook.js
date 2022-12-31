@@ -3,7 +3,7 @@ const stripe = require('stripe')(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY);
 const endpointSecret = process.env.NEXT_PUBLIC_STRIPE_SIGNING_SECRET;
 
 axios.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
-  let event = request.body;
+  let event = request.rawBody;
   if (endpointSecret) {
     const signature = request.headers['stripe-signature'];
     try {
