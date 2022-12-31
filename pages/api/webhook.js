@@ -6,9 +6,9 @@ export const config = {api: {bodyParser: false}}
 
 async function handler(req, res) {
     console.log(req.body, 'hook')
-    const stripe = initStripe(process.env.STRIPE_SECRET_KEY)
+    const stripe = initStripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY)
     const signature = req.headers["stripe-signature"]
-    const signingSecret = process.env.STRIPE_SIGNING_SECRET
+    const signingSecret = process.env.NEXT_PUBLIC_STRIPE__WEBHOOK_KEY
     let reqBuffer = await buffer(req)
     reqBuffer = reqBuffer.toString()
 
