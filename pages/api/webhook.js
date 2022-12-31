@@ -9,8 +9,7 @@ async function handler(req, res) {
     const stripe = initStripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY)
     const signature = req.headers["stripe-signature"]
     const signingSecret = process.env.NEXT_PUBLIC_STRIPE__WEBHOOK_KEY
-    let reqBuffer = await buffer(req)
-    reqBuffer = reqBuffer.toString()
+    let reqBuffer = await buffer(req.rawBody)
 
     let event;
 
