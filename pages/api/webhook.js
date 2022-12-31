@@ -16,7 +16,7 @@ async function handler(req, res) {
 
     try{
         event = stripe.webhooks.constructEvent(reqBuffer, signature, signingSecret)
-        if (event.type === "charge.succeeded") {
+        if (event.type === "checkout.session.completed") {
             const charge = event.data.object;
             res.json(charge)
         } else {
