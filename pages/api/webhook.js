@@ -20,7 +20,7 @@ export default async (req, res) => {
     const stripeEvent = stripe.webhooks.constructEvent(
       rawBody,
       headers["stripe-signature"],
-      process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_KEY
+      process.env.NEXT_PUBLIC_STRIPE_SIGNING_SECRET
     );
 
     console.log(`stripeEvent: ${stripeEvent.type}`);
