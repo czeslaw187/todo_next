@@ -1,13 +1,29 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google";
 
-export const authOptions = {
+export default NextAuth({
     providers: [
         GoogleProvider({
             clientId: process.env.NEXT_PUBLIC_GOOGLE_ID,
-            clientSecret: process.env.NEXT_PUBLIC_GOOGLE_SECRET
-          })
-    ]
-}
-
-export default NextAuth(authOptions)
+            clientSecret: process.env.NEXT_PUBLIC_GOOGLE_SECRET,
+        }),
+    ],
+    secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
+    session: {
+        jwt: true
+    },
+    
+    callbacks: {        
+        session: async (session, token, user) => {
+          if (!session?.user || !token?.account) {
+            return session
+          }
+          session.user = user.user
+          session.user.id = token.account.id
+          session.accessToken = token.account.accessToken
+      
+          return session
+        },
+      }
+   
+})
