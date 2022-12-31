@@ -1,36 +1,43 @@
-import initStripe from 'stripe'
-import {buffer} from 'micro'
-import axios from 'axios'
+import { buffer } from "micro";
+const Stripe = require('stripe');
 
-export const config = {api: {bodyParser: false}}
+const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY, {
+    apiVersion: '2020-08-27'
+});
+const webhookSecret = process.env.NEXT_PUBLIC_STRIPE__WEBHOOK_KEY;
 
-async function handler(req, res) {
-    console.log(req.body, 'hook')
-    const stripe = initStripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY)
-    const signature = req.headers["stripe-signature"]
-    const signingSecret = process.env.NEXT_PUBLIC_STRIPE__WEBHOOK_KEY
-    let reqBuffer = await buffer(req)
-    reqBuffer = reqBuffer.toString()
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
 
-    let event;
 
-    try{
-        event = stripe.webhooks.constructEvent(reqBuffer, signature, signingSecret)
-        if (event.data.object.status === 'succeeded') {
-            const subscriberEmail = event.data.object.charges.data[0].billing_details.email
-            const subscriberName = event.data.object.charges.data[0].billing_details.name
-            axios.post(process.env.NEXT_PUBLIC_API_URL + '/api/subscribeUser',{
-                email: subscriberEmail
-            })
-        } else {
-            console.log('Failure')
+const handler = async (req, res) => {
+    if (req.method === "POST") {
+        const buf = await buffer(req);
+        const sig = req.headers["stripe-signature"];
+
+        let stripeEvent;
+
+        try {
+            stripeEvent = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
+            console.log( 'stripeEvent', stripeEvent );
+        } catch (err) {
+            res.status(400).send(`Webhook Error: ${err.message}`);
+            return;
         }
-    } catch(e) {
-        console.log(e)
-        return res.status(400).send(`Webhook error: ${e.message}`)
-    }
-    
-    res.send({received: true})
-}
 
-export default handler
+        if ( 'checkout.session.completed' === stripeEvent.type ) {
+            const session = stripeEvent.data.object;
+            console.log( 'payment success', session );
+       }
+
+        res.json({ received: true });
+    } else {
+        res.setHeader("Allow", "POST");
+        res.status(405).end("Method Not Allowed");
+    }
+};
+
+export default handler;
