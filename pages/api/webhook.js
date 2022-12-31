@@ -17,7 +17,7 @@ async function handler(req, res) {
     try{
         event = stripe.webhooks.constructEvent(reqBuffer, signature, signingSecret)
         if (event.type === "charge.succeeded") {
-            const charge = event.data.object;
+            const charge = axios.get(process.env.NEXT_PUBLIC_URL + '/api/getAllUsers')
             res.json(charge)
         } else {
             console.log('Failure')
