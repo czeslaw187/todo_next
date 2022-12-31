@@ -1,39 +1,33 @@
-const getRawBody = require("raw-body");
+import initStripe from 'stripe'
+import {buffer} from 'micro'
+import axios from 'axios'
 
-const stripe = require("stripe")(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY, {
-  apiVersion: '2020-08-27',
-});
+export const config = {api: {bodyParser: false}}
 
-// Disable next.js body parsing (stripe needs the raw body to validate the event)
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+async function handler(req, res) {
+    console.log(req.body, 'hook')
+    const stripe = initStripe(process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_KEY)
+    const signature = req.headers["stripe-signature"]
+    const signingSecret = process.env.NEXT_PUBLIC_STRIPE_SIGNING_SECRET
+    let reqBuffer = await buffer(req)
+    reqBuffer = reqBuffer.toString()
 
-export default async (req, res) => {
-  const headers = req.headers;
+    let event;
 
-  try {
-    const rawBody = await getRawBody(req);
+    try{
+        event = stripe.webhooks.constructEvent(reqBuffer, signature, signingSecret)
+        if ( 'checkout.session.completed' === event.type ) {
+            const session = event.data.object;
+            console.log( 'payment success', session );
+        } else {
+            console.log('Failure')
+        }
+    } catch(e) {
+        console.log(e)
+        return res.status(400).send(`Webhook error: ${e.message}`)
+    }
+    
+    res.send({received: true})
+}
 
-    const stripeEvent = stripe.webhooks.constructEvent(
-      rawBody,
-      headers["stripe-signature"],
-      process.env.NEXT_PUBLIC_STRIPE_SIGNING_SECRET
-    );
-
-    console.log(`stripeEvent: ${stripeEvent.type}`);
-
-    // Get the object from stripeEvent
-    const object = stripeEvent.data.object;
-        res.json(object)
-    // Send success response
-    res.send({ status: "success" });
-  } catch (error) {
-    console.log("stripe webhook error", error);
-
-    // Send error response
-    res.send({ status: "error", code: error.code, message: error.message });
-  }
-};
+export default handler
