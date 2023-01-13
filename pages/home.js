@@ -10,7 +10,7 @@ function Home() {
     const router = useRouter()
     useEffect(()=>{
         if (!session) {
-            router.push('/')
+            router.push(process.env.NEXT_PUBLIC_URL + '/')
         }
     },[session])
     

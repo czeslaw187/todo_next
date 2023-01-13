@@ -1,10 +1,11 @@
 import { Client } from "pg";
 
 export default async function getAllUsers(req, res) {
+    const {email} = req.body
     const client = new Client(process.env.NEXT_PUBLIC_COCKROACHDB_URL)
     await client.connect()
     try {
-        const response = await client.query('SELECT * FROM users')
+        const response = await client.query('SELECT * FROM users WHERE email=$1',[email])
         if (response.rows.length > 0) {
             res.json(response.rows)
         } else {
