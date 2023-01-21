@@ -5,7 +5,7 @@ export default async function createStructuredSelector(req, res) {
     const client = new Client(process.env.NEXT_PUBLIC_COCKROACHDB_URL)
     await client.connect()
     try {
-        await client.query('INSERT INTO users (name, email, subscription) VALUES ($1, $2, 0)')
+        await client.query('INSERT INTO users (name, email, subscription) VALUES ($1, $2, 0)',[name, email])
     } catch (error) {
         return res.json({message: error.message})
     } finally {

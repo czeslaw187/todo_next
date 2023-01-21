@@ -1,8 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { addUser } from "../lib/baseReducer";
-import { useSelector, useDispatch } from "react-redux";
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
 const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
@@ -11,15 +9,11 @@ const stripePromise = loadStripe(publishableKey);
 function Subscribe() {
     const {data:session} = useSession()
     const router = useRouter()
-    const myUser = useSelector(state=>state.todos.user)
-    const dispatch = useDispatch()
     
-    if (!session) {
-        router.push('/')
-    }
-
     useEffect(()=>{
-        dispatch(addUser(session?.user))
+      if (!session) {
+        router.push('/')
+      }
     },[])
     
     const createCheckOutSession = async () => {
