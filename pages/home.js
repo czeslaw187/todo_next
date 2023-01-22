@@ -20,13 +20,13 @@ function Home() {
 
     const user = useSelector(state => state.todos.user)
     console.log(user, 'user')
-    if (user[0]?.subscription < Date.now()) {
+    if (user?.subscription < Date.now()) {
         router.push('/subscribe')
     }
     
     return (
         <div className="h-full flex flex-col">
-            <TodoList />
+            <TodoList session={session} />
         </div>
     )
 }
