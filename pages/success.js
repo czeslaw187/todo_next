@@ -7,9 +7,17 @@ function Success() {
     const {data:session} = useSession()
     const router = useRouter()
     
-    if (!session) {
-        router.push('/')
-    }
+    
+    
+    useEffect(()=>{
+        if (!session) {
+            router.push('/')
+        } else {
+            setTimeout(()=>{
+                router.push('/home')
+            },5000)
+        }
+    },[])
 
     return ( 
         <div className="h-full flex">

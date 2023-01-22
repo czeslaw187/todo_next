@@ -19,7 +19,7 @@ function Home() {
     }, [session])
 
     const user = useSelector(state => state.todos.user)
-    console.log(user[0].subscription, user[0], 'user')
+    
     if (user[0]?.subscription < Date.now()) {
         router.push('/subscribe')
     }
