@@ -11,12 +11,11 @@ function Success() {
     useEffect(()=>{
         if (!session) {
             router.push('/')
-        }         
+        }    
+        setTimeout(()=>{
+            router.push('/home')
+        },5000)     
     },[session])
-
-    setTimeout(()=>{
-        router.push('/home')
-    },5000)
 
     return ( 
         <div className="h-full flex">
