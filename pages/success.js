@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { subscribeState } from '../lib/baseReducer'
 
 function Success() {
     const {data:session} = useSession()

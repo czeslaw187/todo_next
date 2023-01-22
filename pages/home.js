@@ -24,7 +24,7 @@ function Home() {
         if (user[0]?.subscription < Date.now()) {
             router.push('/subscribe')
         }
-    },[])
+    },[user])
     
     return (
         <div className="h-full flex flex-col">
