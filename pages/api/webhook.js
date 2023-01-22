@@ -1,11 +1,8 @@
 import initStripe from 'stripe'
 import {buffer} from 'micro'
-import { subscribeMe } from '../../lib/baseReducer'
-import { useDispatch } from 'react-redux'
 export const config = {api: {bodyParser: false}}
 
 async function handler(req, res) {
-    const dispatch = useDispatch()
     console.log(req.body, 'hook')
     const stripe = initStripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY)
     const signature = req.headers["stripe-signature"]
@@ -20,7 +17,10 @@ async function handler(req, res) {
         const name = event.data.object.charges.data[0].billing_details.name
         const email = event.data.object.charges.data[0].billing_details.email
         if (event.data.object.status === 'succeeded') {
-            dispatch(subscribeMe(name, email))
+            await axios.post(process.env.NEXT_PUBLIC_URL + '/api/subscribeUser',{
+                name: name,
+                email: email
+            })
         } else {
             console.log('Failure')
         }

@@ -1,9 +1,12 @@
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { useDispatch } from "react-redux";
+import { subscribeUser } from '../lib/baseReducer'
 
 function Success() {
     const {data:session} = useSession()
     const router = useRouter()
+    const dispatch = useDispatch()
     
     if (!session) {
         router.push('/')
@@ -12,6 +15,10 @@ function Success() {
             router.push('/home')
         },3000)
     }
+
+    const duration = Date.now() + 30*86400000
+    const email = session.session.user.email
+    dispatch(subscribeUser(duration, email))
 
     return ( 
         <div className="h-full flex">
