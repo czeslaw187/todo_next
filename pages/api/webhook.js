@@ -1,5 +1,7 @@
 import initStripe from 'stripe'
 import {buffer} from 'micro'
+import axios from 'axios'
+
 export const config = {api: {bodyParser: false}}
 
 async function handler(req, res) {
