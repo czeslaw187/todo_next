@@ -8,7 +8,7 @@ function TodoList({session}) {
     const [input,setInput] = useState('')
     const [activeTab,setActiveTab] = useState('All')
     let myTodos = useSelector(state=>state.todos.todos)
-    console.log(myTodos, 'mytodos')
+    
     const dispatch = useDispatch()
 
     const handleSubmit = (e) =>{
@@ -30,7 +30,7 @@ function TodoList({session}) {
         listOfTodos = myTodos
     } 
 
-    
+    console.log(myTodos, 'mytodos')
     return ( 
         <>
             <div className="w-full flex flex-col">
