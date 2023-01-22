@@ -20,9 +20,11 @@ function Home() {
 
     const user = useSelector(state => state.todos.user)
     
-    if (user[0]?.subscription < Date.now()) {
-        router.push('/subscribe')
-    }
+    useEffect(()=>{
+        if (user[0]?.subscription < Date.now()) {
+            router.push('/subscribe')
+        }
+    },[])
     
     return (
         <div className="h-full flex flex-col">

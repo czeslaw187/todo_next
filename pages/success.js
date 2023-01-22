@@ -1,23 +1,17 @@
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
 
 function Success() {
     const {data:session} = useSession()
     const router = useRouter()
     
-    
-    
-    useEffect(()=>{
-        if (!session) {
-            router.push('/')
-        } else {
-            setTimeout(()=>{
-                router.push('/home')
-            },5000)
-        }
-    },[])
+    if (!session) {
+        router.push('/')
+    } else {
+        setTimeout(()=>{
+            router.push('/home')
+        },3000)
+    }
 
     return ( 
         <div className="h-full flex">
