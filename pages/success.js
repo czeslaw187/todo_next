@@ -2,24 +2,21 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { subscribeState } from '../lib/baseReducer'
 
 function Success() {
     const {data:session} = useSession()
     const router = useRouter()
-    const dispatch = useDispatch()
-    
-    if (!session) {
-        router.push('/')
-    } else {
-        setTimeout(()=>{
-            router.push('/home')
-        },3000)
-    }
 
     useEffect(()=>{
-        const duration = Date.now() + 30*86400000
-        const email = session.session.user.email
+        if (!session) {
+            router.push('/')
+        }         
     },[session])
+
+    setTimeout(()=>{
+        router.push('/home')
+    },5000)
 
     return ( 
         <div className="h-full flex">
