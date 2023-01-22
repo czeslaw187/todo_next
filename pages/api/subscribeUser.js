@@ -8,7 +8,7 @@ export default async function(req, res) {
     await client.connect()
     try {
         await client.query('UPDATE users SET subscription=$1 WHERE email=$2',[duration, email])
-        res.json({message: 'ok', duration: duration, email: email})
+        res.json({message: 'ok'})
     } catch (error) {
         return res.json({message: error.message})
     } finally {
